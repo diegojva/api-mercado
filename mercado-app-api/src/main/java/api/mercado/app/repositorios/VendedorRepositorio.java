@@ -9,6 +9,7 @@ import java.util.Optional;
 @Repository
 public interface VendedorRepositorio extends JpaRepository<Vendedor, Long> {
 
-    public Vendedor findByUsername(String username);
+     Optional<Vendedor> findByUsername(String username);
+     boolean existsByUsername(String username);
 }
 

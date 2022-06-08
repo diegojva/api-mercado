@@ -10,8 +10,9 @@ public interface ProductoServicio {
     Producto registrarProducto(Producto producto);
     Producto modificarProducto(Producto producto);
     List<Producto> listarProductos();
-    Producto obtenerPuestoPorId(Long idProducto);
+    Producto obtenerProductoPorId(Long idProducto);
     void eliminarProducto(Long idProducto);
-    public List<Producto> obtenerProductosPorPuesto(Long idPuesto);
 
+    List<Producto> obtenerProductosPorPuesto(Long idPuesto);
+    List<Producto> obtenerProductosPorOrdenId(Long idOrden);
 }

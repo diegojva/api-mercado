@@ -6,7 +6,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import java.util.List;
 import java.util.Optional;
 
-public interface VendedorServicio extends UserDetailsService {
+public interface VendedorServicio{
 
     Vendedor registrarVendedor(Vendedor vendedor);
     Vendedor modificarVendedor(Vendedor vendedor);
@@ -14,6 +14,6 @@ public interface VendedorServicio extends UserDetailsService {
     Vendedor obtenerVendedorPorId(Long idVendedor);
     void eliminarVendedor(Long idVendedor);
 
-    public Optional<Vendedor> findByUsername(String username);
-
+    Vendedor getVendedorPorUsername(String username);
+    Vendedor getVendedorPorPuestoId(Long idPuesto);
 }

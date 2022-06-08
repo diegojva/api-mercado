@@ -1,26 +1,23 @@
 package api.mercado.app.servicios.impl;
 
 import api.mercado.app.entidades.Puesto;
-import api.mercado.app.entidades.Vendedor;
+import api.mercado.app.repositorios.OrdenDetalleRepositorio;
 import api.mercado.app.repositorios.PuestoRepositorio;
-import api.mercado.app.repositorios.VendedorRepositorio;
 import api.mercado.app.servicios.PuestoServicio;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class PuestoServicioImpl implements PuestoServicio {
 
-    @Autowired
-    private final PuestoRepositorio puestoRepositorio;
-    private final VendedorRepositorio vendedorRepositorio;
 
-    public PuestoServicioImpl(PuestoRepositorio puestoRepositorio, VendedorRepositorio vendedorRepositorio){
+    private final PuestoRepositorio puestoRepositorio;
+    private final OrdenDetalleRepositorio ordenDetalleRepositorio;
+
+    public PuestoServicioImpl(PuestoRepositorio puestoRepositorio,OrdenDetalleRepositorio ordenDetalleRepositorio ){
         this.puestoRepositorio = puestoRepositorio;
-        this.vendedorRepositorio = vendedorRepositorio;
+        this.ordenDetalleRepositorio = ordenDetalleRepositorio;
     }
 
     @Override
@@ -45,14 +42,33 @@ public class PuestoServicioImpl implements PuestoServicio {
 
     @Override
     public List<Puesto> obtenerPuestosPorIdVendedor(Long idVendedor) {
-       // Vendedor vendedor = vendedorRepositorio.findById(idVendedor).orElse(new Vendedor());
-        List<Puesto> puestos = puestoRepositorio.findByVendedorId(idVendedor);
-        return puestos;
+
+        return puestoRepositorio.findByVendedorId(idVendedor);
     }
 
+    @Override
+    public List<Puesto> obtenerPuestosPorIdMercado(Long idMercado) {
+        return puestoRepositorio.findByMercadoId(idMercado);
+    }
+
+    @Override
+    public List<Puesto> obtenerPuestosPorIdsector(Long idSector) {
+        return puestoRepositorio.findBySectorId(idSector);
+    }
+
+    @Override
+    public List<Puesto> obtenerPuestosPorEstado(String estado) {
+        return puestoRepositorio.findByEstado(estado);
+    }
+
+    @Override
+    public List<Puesto> obtenerPuestosPorMercadoIdYEstado(Long id, String estado) {
+        return puestoRepositorio.findByMercadoIdAndEstado(id,estado);
+    }
 
     @Override
     public void eliminarPuesto(Long idPuesto) {
         puestoRepositorio.deleteById(idPuesto);
     }
+
 }

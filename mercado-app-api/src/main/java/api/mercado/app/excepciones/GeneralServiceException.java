@@ -25,4 +25,6 @@ public class GeneralServiceException extends RuntimeException {
     public GeneralServiceException(Throwable cause) {
         super(cause);
     }
+
+
 }

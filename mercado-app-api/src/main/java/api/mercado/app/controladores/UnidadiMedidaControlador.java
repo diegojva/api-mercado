@@ -1,9 +1,13 @@
 package api.mercado.app.controladores;
 
+import api.mercado.app.entidades.Sector;
 import api.mercado.app.entidades.UnidadMedida;
+import api.mercado.app.servicios.SectorServicio;
 import api.mercado.app.servicios.UnidadMedidaServicio;
+import api.mercado.app.servicios.impl.UnidadMedidaImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,6 +23,7 @@ public class UnidadiMedidaControlador {
         this.unidadMedidaServicio = unidadMedidaServicio;
     }
 
+    @PreAuthorize("hasRole('MASTER')")
     @PostMapping
     public ResponseEntity<UnidadMedida> registrarUnidadMedida(@Validated  @RequestBody UnidadMedida unidadMedida) {
         UnidadMedida unidadMedidaNew = unidadMedidaServicio.registrarUnidadMedida(unidadMedida);
@@ -38,12 +43,14 @@ public class UnidadiMedidaControlador {
         return new ResponseEntity<UnidadMedida>(unidadMedida, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('MASTER')")
     @PutMapping
     public ResponseEntity<UnidadMedida> actualizarUnidadMedida(@RequestBody UnidadMedida unidadMedida) {
         UnidadMedida unidadMedidaUpdate = unidadMedidaServicio.modificarUnidadMedida(unidadMedida);
         return new ResponseEntity<UnidadMedida>(unidadMedidaUpdate, HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasRole('MASTER')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminarUnidadMedida(@PathVariable Long id) {
         unidadMedidaServicio.eliminarUnidadMedida(id);

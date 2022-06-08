@@ -1,6 +1,8 @@
 package api.mercado.app.servicios.impl;
 
+import api.mercado.app.entidades.Sector;
 import api.mercado.app.entidades.UnidadMedida;
+import api.mercado.app.repositorios.SectorRepositorio;
 import api.mercado.app.repositorios.UnidadMedidaRepositorio;
 import api.mercado.app.servicios.UnidadMedidaServicio;
 import org.springframework.stereotype.Service;
@@ -18,11 +20,13 @@ public class UnidadMedidaImpl implements UnidadMedidaServicio {
 
     @Override
     public UnidadMedida registrarUnidadMedida(UnidadMedida unidadMedida) {
+        unidadMedida.setAbreviatura(unidadMedida.getAbreviatura().toUpperCase());
         return unidadMedidaRepositorio.save(unidadMedida);
     }
 
     @Override
     public UnidadMedida modificarUnidadMedida(UnidadMedida unidadMedida) {
+        unidadMedida.setAbreviatura(unidadMedida.getAbreviatura().toUpperCase());
         return unidadMedidaRepositorio.save(unidadMedida);
     }
 

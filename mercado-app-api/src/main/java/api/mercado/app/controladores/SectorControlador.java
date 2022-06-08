@@ -7,11 +7,12 @@ import api.mercado.app.servicios.SectorServicio;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Secured("ROLE_ADMIN")
+
 @RestController
 @RequestMapping("/sectores")
 public class SectorControlador {
@@ -22,6 +23,7 @@ public class SectorControlador {
         this.sectorServicio = sectorServicio;
     }
 
+    @PreAuthorize("hasRole('MASTER')")
     @PostMapping
     public ResponseEntity<Sector> registrarSector(@RequestBody Sector sector) {
         Sector sectorNew = sectorServicio.registrarSector(sector);
@@ -41,12 +43,14 @@ public class SectorControlador {
         return new ResponseEntity<Sector>(sector, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('MASTER')")
     @PutMapping
     public ResponseEntity<Sector> actualizarSector(@RequestBody Sector sector) {
         Sector sectorUpdate = sectorServicio.modificarSector(sector);
         return new ResponseEntity<Sector>(sectorUpdate, HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasRole('MASTER')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminarSector(@PathVariable Long id) {
         sectorServicio.eliminarSector(id);

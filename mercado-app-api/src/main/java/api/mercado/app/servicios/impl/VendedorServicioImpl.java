@@ -1,29 +1,40 @@
 package api.mercado.app.servicios.impl;
 
-import api.mercado.app.entidades.Rol;
-import api.mercado.app.entidades.Vendedor;
-import api.mercado.app.repositorios.RolRepositorio;
-import api.mercado.app.repositorios.VendedorRepositorio;
+import api.mercado.app.entidades.*;
+import api.mercado.app.repositorios.*;
+import api.mercado.app.servicios.OrdenServicio;
 import api.mercado.app.servicios.VendedorServicio;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.security.core.GrantedAuthority;
 
 import java.util.*;
-import java.util.stream.Collectors;
+
 
 @Service
 public class VendedorServicioImpl implements VendedorServicio {
 
     @Autowired
     private RolRepositorio rolRepositorio;
+
+    @Autowired
+    private OrdenDetalleRepositorio ordenDetalleRepositorio;
+
+    @Autowired
+    private OrdenRepositorio ordenRepositorio;
+
+    @Autowired
+    private ProductoRepositorio productoRepositorio;
+
+    @Autowired
+    private PuestoRepositorio puestoRepositorio;
+
+    @Autowired
+    private DespachadorRepositorio despachadorRepositorio;
+
+    @Autowired
+    private AdministradorRepositorio administradorRepositorio;
 
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
@@ -38,21 +49,26 @@ public class VendedorServicioImpl implements VendedorServicio {
     public Vendedor registrarVendedor(Vendedor vendedor) {
 
         Vendedor vendedorNew = new Vendedor();
-        vendedorNew.setNombre(vendedor.getNombre());
-        vendedorNew.setApellido(vendedor.getApellido());
-        vendedorNew.setUsername(vendedor.getUsername());
-        vendedorNew.setDni(vendedor.getDni());
-        vendedorNew.setPassword(passwordEncoder.encode(vendedor.getPassword()));
+        if(!despachadorRepositorio.existsByUsername(vendedor.getUsername()) && !administradorRepositorio.existsByUsername(vendedor.getUsername())) {
 
-        Rol roles = rolRepositorio.findByNombre("ROLE_ADMIN").get();
-        vendedorNew.setRoles(Collections.singleton(roles));
+            vendedorNew.setNombre(vendedor.getNombre());
+            vendedorNew.setApellido(vendedor.getApellido());
+            vendedorNew.setUsername(vendedor.getUsername());
+            vendedorNew.setDni(vendedor.getDni());
+            vendedorNew.setPassword(passwordEncoder.encode(vendedor.getPassword()));
 
-        vendedorNew.setEstado("Activo");
+            Rol roles = rolRepositorio.findByNombre("ROLE_ADMIN").get();
+            vendedorNew.setRoles(Collections.singleton(roles));
+
+            vendedorNew.setEstado("Activo");
+        }
         return vendedorRepositorio.save(vendedorNew);
     }
 
     @Override
     public Vendedor modificarVendedor(Vendedor vendedor) {
+        Rol roles = rolRepositorio.findByNombre("ROLE_ADMIN").get();
+        vendedor.setRoles(Collections.singleton(roles));
         return vendedorRepositorio.save(vendedor);
     }
 
@@ -66,22 +82,35 @@ public class VendedorServicioImpl implements VendedorServicio {
         return vendedorRepositorio.findById(idVendedor).orElse(new Vendedor());
     }
 
-    public Vendedor obtenerVendedorPorUsername(String username) {
-        return vendedorRepositorio.findByUsername(username);
-    }
-
     @Override
     public void eliminarVendedor(Long idVendedor) {
+        Vendedor vendedor = vendedorRepositorio.findById(idVendedor).orElse(new Vendedor());
+        for(Rol rol : vendedor.getRoles()){
+            vendedor.getRoles().remove(rol);
+        }
+        for(Puesto puesto : puestoRepositorio.findByVendedorId(idVendedor)){
+            for(Producto producto : productoRepositorio.findByPuestoId(puesto.getId())){
+
+                for(OrdenDetalle ordenDetalle: ordenDetalleRepositorio.findByProductoId(producto.getId())){
+                    ordenRepositorio.deleteById(ordenDetalle.getOrder().getId());
+                }
+                productoRepositorio.deleteById(producto.getId());
+            }
+            puestoRepositorio.deleteById(puesto.getId());
+        }
+
         vendedorRepositorio.deleteById(idVendedor);
     }
 
     @Override
-    public Optional<Vendedor> findByUsername(String username) {
-        return Optional.ofNullable(vendedorRepositorio.findByUsername(username));
+    public Vendedor getVendedorPorUsername(String username) {
+        return vendedorRepositorio.findByUsername(username).orElse(new Vendedor());
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return null;
+    public Vendedor getVendedorPorPuestoId(Long idPuesto) {
+
+        return puestoRepositorio.findById(idPuesto).get().getVendedor();
     }
+
 }

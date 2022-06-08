@@ -20,11 +20,13 @@ public class SectorServicioImpl implements SectorServicio {
 
     @Override
     public Sector registrarSector(Sector sector) {
+        sector.setNombre(sector.getNombre().toUpperCase());
         return sectorRepositorio.save(sector);
     }
 
     @Override
     public Sector modificarSector(Sector sector) {
+        sector.setNombre(sector.getNombre().toUpperCase());
         return sectorRepositorio.save(sector);
     }
 

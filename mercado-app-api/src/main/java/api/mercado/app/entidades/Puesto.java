@@ -37,6 +37,13 @@ public class Puesto {
     @Column (name="descripcion", nullable = false, length =  150)
     private String descripcion;
 
+    @NotNull
+    @NotEmpty
+    @NotBlank
+    @Size(min=5, max=30, message ="estado debe tener 10 caracteres como minímo y máximo de 30")
+    @Column (name="estado", length =  150)
+    private String estado;
+
     @ManyToOne
     @JoinColumn(name = "id_vendedor", nullable = false,
             foreignKey = @ForeignKey(name = "Fk_puesto_vendedor"))
@@ -46,5 +53,10 @@ public class Puesto {
     @JoinColumn(name = "id_sector", nullable = false,
             foreignKey = @ForeignKey(name = "Fk_productos_sector"))
     private Sector sector;
+
+    @ManyToOne
+    @JoinColumn(name = "id_mercado",
+            foreignKey = @ForeignKey(name = "Fk_puestos_mercado"))
+    private Mercado mercado;
 
 }

@@ -1,15 +1,14 @@
 package api.mercado.app.entidades;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.math.BigDecimal;
+import java.util.List;
 
 @Getter
 @Setter
@@ -31,8 +30,7 @@ public class Producto {
     private String nombre;
 
     @Column(name="precio", nullable = false)
-    private double precio;
-
+    private Double precio;
 
     @Column(name="stock", nullable = false)
     private Double stock;
@@ -47,10 +45,13 @@ public class Producto {
             foreignKey = @ForeignKey(name = "Fk_producto_puesto"))
     private Puesto puesto;
 
+    @Size(min=5, max=850, message ="la dirección de la imagen debe tener 5 caracteres como minímo y máximo de 850")
+    @Column(name="foto",length = 850)
+    private String foto;
+
     @OneToOne
     @JoinColumn(name = "id_unidad_medida", nullable = false,
             foreignKey = @ForeignKey(name = "Fk_unidad_medida_producto"))
     private UnidadMedida unidadMedida;
-
 
 }

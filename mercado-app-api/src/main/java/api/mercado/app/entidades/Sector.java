@@ -26,8 +26,8 @@ public class Sector {
     @NotNull
     @NotEmpty
     @NotBlank
-    @Size(min=3, max=15, message ="nombre debe tener 3 caracteres como minímo y máximo de 15")
-    @Column (name="nombres", nullable = false, length =  15, unique = true)
+    @Size(min=3, max=30, message ="nombre debe tener 3 caracteres como minímo y máximo de 30")
+    @Column (name="nombres", nullable = false, length =  30, unique = true)
     private String nombre;
 
     @NotNull

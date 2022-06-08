@@ -11,6 +11,10 @@ public interface PuestoServicio {
     List<Puesto> listarPuestos();
     Puesto obtenerPuestoPorId(Long idPuesto);
     void eliminarPuesto(Long idPuesto);
-    public List<Puesto> obtenerPuestosPorIdVendedor(Long idVendedor);
-    //Puesto obtenerPuestoPorIdVendedor(Long idVendedor);
+
+    List<Puesto> obtenerPuestosPorIdVendedor(Long idVendedor);
+    List<Puesto> obtenerPuestosPorIdMercado(Long idMercado);
+    List<Puesto> obtenerPuestosPorIdsector(Long idSector);
+    List<Puesto> obtenerPuestosPorEstado(String estado);
+    List<Puesto> obtenerPuestosPorMercadoIdYEstado(Long id, String estado);
 }

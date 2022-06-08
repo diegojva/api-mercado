@@ -1,6 +1,7 @@
 package api.mercado.app.servicios;
 
 import api.mercado.app.entidades.UnidadMedida;
+import api.mercado.app.entidades.Vendedor;
 
 import java.util.List;
 
